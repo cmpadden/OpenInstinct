@@ -1,16 +1,8 @@
-import type * as LinqAdapter from "@linqapp/chat-sdk-adapter";
+import { createLinqAdapter } from "@linqapp/chat-sdk-adapter";
 import { describe, expect, it, vi } from "vitest";
 
-// Exercise the adapter Eve actually loads, not only the separately installed
-// adapter used for its public declarations and application-level tests.
-const { createLinqAdapter } = await vi.importActual<typeof LinqAdapter>(
-  new URL(
-    "./compiled/@linqapp/chat-sdk-adapter/index.js",
-    import.meta.resolve("eve")
-  ).pathname
-);
-
-describe("Eve bundled Linq adapter", () => {
+// Exercise the patched adapter the Linq channel uses for native replies.
+describe("Linq native-reply adapter", () => {
   it("preserves native reply, media, and idempotency fields in the outgoing request", async () => {
     const fetch = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       Response.json({
